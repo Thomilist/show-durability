@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "net.thomilist.showdurability.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [],
+    "client": [
+        "ShowDurability"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "schemaVersion": 1,
+    "id": "showdurability",
+    "version": "${version}",
+    "name": "Show Durability",
+    "description": "Show the durability of items in inventories and in the hotbar directly on the items with a number.",
+    "authors": [
+        "Thomilist"
+    ],
+    "contact": {
+        "homepage": "https://modrinth.com/mod/show-durability",
+        "sources": "https://github.com/thomilist/show-durability/"
+    },
+    "license": "MIT",
+    "icon": "assets/showdurability/icon.png",
+    "environment": "client",
+    "mixins": [
+        "showdurability.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.14.6",
+        "minecraft": "~1.19",
+        "java": ">=17"
+    }
+}
