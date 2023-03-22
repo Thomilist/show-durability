@@ -19,12 +19,12 @@ import net.minecraft.resource.SynchronousResourceReloader;
 @Mixin(ItemRenderer.class)
 public abstract class ShowDurabilityMixin implements SynchronousResourceReloader
 {
-    @Inject(at = @At("TAIL"), method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
-    public void renderGuiItemOverlay(TextRenderer renderer, ItemStack stack, int x, int y, @Nullable String countLabel, CallbackInfo info)
+    @Inject(at = @At("TAIL"), method = "renderGuiItemOverlay(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
+    public void renderGuiItemOverlay(MatrixStack matrices, TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countLabel, CallbackInfo info)
     {
         if (Settings.getVisibility())
         {
-            MatrixStack matrixStack = new MatrixStack();
+            matrices.push();
 
             if (stack.getCount() == 1 && stack.isDamageable())
             {
@@ -33,23 +33,24 @@ public abstract class ShowDurabilityMixin implements SynchronousResourceReloader
                 float scaleFactor = 2.0f;
 
                 String durability = String.valueOf(stack.getMaxDamage() - stack.getDamage());
-                float zOffset = ((ItemRenderer)(Object)this).zOffset;
-                matrixStack.translate(0.0, 0.0, zOffset + 200.0f);
-                matrixStack.scale(1.0f / scaleFactor, 1.0f / scaleFactor, 1);
+                matrices.translate(0.0, 0.0, 200.0f);
+                matrices.scale(1.0f / scaleFactor, 1.0f / scaleFactor, 1);
                 VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-                renderer.draw(
+                textRenderer.draw(
                     durability,
-                    (float)(scaleFactor * x + (16 / scaleFactor) + 5 + 19 - 2 - renderer.getWidth(durability)),
+                    (float)(scaleFactor * x + (16 / scaleFactor) + 5 + 19 - 2 - textRenderer.getWidth(durability)),
                     (float)(scaleFactor * y + (16 / scaleFactor) + 1 + 6 + 3),
                     0xFFFFFF,
                     true,
-                    matrixStack.peek().getPositionMatrix(),
-                    (VertexConsumerProvider)immediate,
-                    false,
+                    matrices.peek().getPositionMatrix(),
+                    immediate,
+                    TextRenderer.TextLayerType.NORMAL,
                     0,
                     LightmapTextureManager.MAX_LIGHT_COORDINATE);
                 immediate.draw();
             }
+
+            matrices.pop();
         }
     }
 }
