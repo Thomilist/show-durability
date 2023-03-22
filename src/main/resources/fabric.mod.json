@@ -2,6 +2,7 @@
     "schemaVersion": 1,
     "id": "showdurability",
     "version": "${version}",
+
     "name": "Show Durability",
     "description": "Show the durability of items in inventories and in the hotbar directly on the items with a number.",
     "authors": [
@@ -13,13 +14,21 @@
     },
     "license": "MIT",
     "icon": "assets/showdurability/icon.png",
+
     "environment": "client",
+    "entrypoints": {
+        "client": [
+            "net.thomilist.showdurability.ShowDurabilityMod"
+        ]
+    },
     "mixins": [
         "showdurability.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.14.12",
-        "minecraft": "~1.19",
-        "java": ">=17"
+        "fabricloader": ">=0.14.17",
+        "fabric-api-base": "*",
+        "minecraft": "1.19.3",
+        "java": ">=17",
+        "fabric-key-binding-api-v1": "*"
     }
 }
