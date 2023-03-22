@@ -14,11 +14,16 @@
     "license": "MIT",
     "icon": "assets/showdurability/icon.png",
     "environment": "client",
+    "entrypoints": {
+        "client": [
+            "net.thomilist.showdurability.ShowDurabilityMod"
+        ]
+    },
     "mixins": [
         "showdurability.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.14.6",
+        "fabricloader": ">=0.14.17",
         "minecraft": "~1.19",
         "java": ">=17"
     }
