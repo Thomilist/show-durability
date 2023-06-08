@@ -1,29 +1,31 @@
 package net.thomilist.showdurability.mixin;
 
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.thomilist.showdurability.Settings;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.jetbrains.annotations.Nullable;
-import java.lang.String;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resource.SynchronousResourceReloader;
 
-@Mixin(ItemRenderer.class)
-public abstract class ShowDurabilityMixin implements SynchronousResourceReloader
+@Mixin(DrawContext.class)
+public abstract class ShowDurabilityMixin
 {
-    @Inject(at = @At("TAIL"), method = "renderGuiItemOverlay(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
-    public void renderGuiItemOverlay(MatrixStack matrices, TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countLabel, CallbackInfo info)
+    @Shadow public abstract MatrixStack getMatrices();
+
+    @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
+    public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
     {
         if (Settings.getVisibility())
         {
+            MatrixStack matrices = getMatrices();
             matrices.push();
 
             if (stack.getCount() == 1 && stack.isDamageable())
