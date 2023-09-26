@@ -8,6 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.thomilist.showdurability.Settings;
+import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,14 +17,29 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DrawContext.class)
-public abstract class ShowDurabilityMixin
+public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
 {
+    boolean is_tab_icon = false;
+
     @Shadow public abstract MatrixStack getMatrices();
+
+    @Override
+    public void setTabIconState(boolean is_tab_icon)
+    {
+        this.is_tab_icon = is_tab_icon;
+        return;
+    }
+
+    @Override
+    public boolean isTabIcon()
+    {
+        return this.is_tab_icon;
+    }
 
     @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
     public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
     {
-        if (Settings.getVisibility())
+        if (Settings.getVisibility() && !isTabIcon())
         {
             MatrixStack matrices = getMatrices();
             matrices.push();
