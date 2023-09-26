@@ -6,7 +6,8 @@
     "mixins": [],
     "client": [
         "ShowDurabilityMixin",
-        "SaveSettingsMixin"
+        "SaveSettingsMixin",
+        "CreativeInventoryScreenTabIconMixin"
     ],
     "injectors": {
         "defaultRequire": 1

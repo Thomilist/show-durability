@@ -17,7 +17,7 @@ public abstract class SaveSettingsMixin extends ReentrantThreadExecutor<Runnable
         super(string);
     }
 
-    @Inject(at = @At("HEAD"), method = "openPauseMenu(Z)V")
+    @Inject(at = @At("HEAD"), method = "openGameMenu(Z)V")
     public void openPauseMenu(boolean pause, CallbackInfo info)
     {
         Settings.save();
