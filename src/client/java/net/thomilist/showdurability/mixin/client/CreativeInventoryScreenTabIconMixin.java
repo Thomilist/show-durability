@@ -1,4 +1,4 @@
-package net.thomilist.showdurability.mixin;
+package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
@@ -25,12 +25,12 @@ public abstract class CreativeInventoryScreenTabIconMixin extends AbstractInvent
     @Inject(at = @At("HEAD"), method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V")
     protected void renderTabIconStart(DrawContext context, ItemGroup group, CallbackInfo ci)
     {
-        ((ShowDurabilityAccess)context).setTabIconState(true);
+        ((ShowDurabilityAccess)context).show_durability$setTabIconState(true);
     }
 
     @Inject(at = @At("RETURN"), method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V")
     protected void renderTabIconEnd(DrawContext context, ItemGroup group, CallbackInfo ci)
     {
-        ((ShowDurabilityAccess)context).setTabIconState(false);
+        ((ShowDurabilityAccess)context).show_durability$setTabIconState(false);
     }
 }

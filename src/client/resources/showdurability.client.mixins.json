@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "package": "net.thomilist.showdurability.mixin.client",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "ShowDurabilityMixin",
+        "SaveSettingsMixin",
+        "CreativeInventoryScreenTabIconMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

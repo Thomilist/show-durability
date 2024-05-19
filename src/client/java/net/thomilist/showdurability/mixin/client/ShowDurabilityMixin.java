@@ -1,4 +1,4 @@
-package net.thomilist.showdurability.mixin;
+package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -12,6 +12,7 @@ import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,19 +20,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DrawContext.class)
 public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
 {
+    @Unique
     boolean is_tab_icon = false;
 
     @Shadow public abstract MatrixStack getMatrices();
 
     @Override
-    public void setTabIconState(boolean is_tab_icon)
+    public void show_durability$setTabIconState(boolean is_tab_icon)
     {
         this.is_tab_icon = is_tab_icon;
         return;
     }
 
     @Override
-    public boolean isTabIcon()
+    public boolean show_durability$isTabIcon()
     {
         return this.is_tab_icon;
     }
@@ -39,7 +41,7 @@ public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
     @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
     public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
     {
-        if (Settings.getVisibility() && !isTabIcon())
+        if (Settings.getVisibility() && !show_durability$isTabIcon())
         {
             MatrixStack matrices = getMatrices();
             matrices.push();
