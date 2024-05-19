@@ -46,8 +46,7 @@ public class Settings
         }
         catch (JsonSyntaxException e)
         {
-            e.printStackTrace();
-            ShowDurabilityMod.LOGGER.error("Invalid JSON syntax.", e);
+            ShowDurabilityMod.LOGGER.error("Invalid JSON syntax:", e);
             return;
         }
 
@@ -65,8 +64,7 @@ public class Settings
         }
         catch (IOException e)
         {
-            e.printStackTrace();
-            ShowDurabilityMod.LOGGER.error("Unable to write to config file.", e);
+            ShowDurabilityMod.LOGGER.error("Unable to write to config file:", e);
         }
 
         return;

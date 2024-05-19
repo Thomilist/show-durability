@@ -1,4 +1,4 @@
-package net.thomilist.showdurability.mixin;
+package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowEventHandler;
