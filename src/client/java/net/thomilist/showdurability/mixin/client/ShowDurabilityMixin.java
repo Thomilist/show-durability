@@ -2,9 +2,6 @@ package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.thomilist.showdurability.Settings;
@@ -20,16 +17,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DrawContext.class)
 public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
 {
+    // The factor used to scale the text size and move it accordingly.
+    // A factor of 2 means the text will be half the original size.
+    @Unique
+    private static final int SCALE_FACTOR = 2;
+
     @Unique
     boolean is_tab_icon = false;
 
-    @Shadow public abstract MatrixStack getMatrices();
+    @Shadow
+    public abstract MatrixStack getMatrices();
+
+    @Shadow
+    public abstract int drawText(TextRenderer textRenderer, @Nullable String text, int x, int y, int color, boolean shadow);
 
     @Override
     public void show_durability$setTabIconState(boolean is_tab_icon)
     {
         this.is_tab_icon = is_tab_icon;
-        return;
     }
 
     @Override
@@ -48,26 +53,12 @@ public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
 
             if (stack.getCount() == 1 && stack.isDamageable())
             {
-                // The factor used to scale the text size and move it accordingly.
-                // A factor of 2.0f means the text will be half the original size.
-                float scaleFactor = 2.0f;
-
                 String durability = String.valueOf(stack.getMaxDamage() - stack.getDamage());
                 matrices.translate(0.0, 0.0, 200.0f);
-                matrices.scale(1.0f / scaleFactor, 1.0f / scaleFactor, 1);
-                VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-                textRenderer.draw(
-                    durability,
-                    (float)(scaleFactor * x + (16 / scaleFactor) + 5 + 19 - 2 - textRenderer.getWidth(durability)),
-                    (float)(scaleFactor * y + (16 / scaleFactor) + 1 + 6 + 3),
-                    0xFFFFFF,
-                    true,
-                    matrices.peek().getPositionMatrix(),
-                    immediate,
-                    TextRenderer.TextLayerType.NORMAL,
-                    0,
-                    LightmapTextureManager.MAX_LIGHT_COORDINATE);
-                immediate.draw();
+                matrices.scale(1.0f / SCALE_FACTOR, 1.0f / SCALE_FACTOR, 1);
+                final int textX = SCALE_FACTOR * x + (16 / SCALE_FACTOR) + 5 + 19 - 2 - textRenderer.getWidth(durability);
+                final int textY = SCALE_FACTOR * y + (16 / SCALE_FACTOR) + 1 + 6 + 3;
+                drawText(textRenderer, durability, textX, textY, 0xFFFFFF, true);
             }
 
             matrices.pop();
