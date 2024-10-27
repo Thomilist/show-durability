@@ -43,8 +43,8 @@ public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
         return this.is_tab_icon;
     }
 
-    @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
-    public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
+    @Inject(at = @At("TAIL"), method = "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
+    public void drawStackOverlay(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
     {
         if (Settings.getVisibility() && !show_durability$isTabIcon())
         {

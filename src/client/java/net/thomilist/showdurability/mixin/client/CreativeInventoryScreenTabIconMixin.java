@@ -1,9 +1,9 @@
 package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen.CreativeScreenHandler;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.resource.featuretoggle.FeatureSet;
@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CreativeInventoryScreen.class)
-public abstract class CreativeInventoryScreenTabIconMixin extends AbstractInventoryScreen<CreativeScreenHandler>
+public abstract class CreativeInventoryScreenTabIconMixin
+    extends HandledScreen<CreativeScreenHandler>
 {
     public CreativeInventoryScreenTabIconMixin(PlayerEntity player, FeatureSet enabledFeatures, boolean operatorTabEnabled)
     {
