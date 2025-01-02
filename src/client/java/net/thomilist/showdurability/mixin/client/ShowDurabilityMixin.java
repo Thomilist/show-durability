@@ -7,7 +7,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.thomilist.showdurability.Config;
+import net.thomilist.showdurability.ShowDurability;
 import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,7 +46,7 @@ public abstract class ShowDurabilityMixin
     @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
     public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
     {
-        if ( Config.getVisibility() && !this.show_durability$isTabIcon() )
+        if ( ShowDurability.CONFIG.getVisibility() && !this.show_durability$isTabIcon() )
         {
             final MatrixStack matrices = this.getMatrices();
             matrices.push();

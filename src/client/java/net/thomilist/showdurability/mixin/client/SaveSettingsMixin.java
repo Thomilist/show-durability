@@ -3,7 +3,7 @@ package net.thomilist.showdurability.mixin.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowEventHandler;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
-import net.thomilist.showdurability.Config;
+import net.thomilist.showdurability.ShowDurability;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,6 +23,6 @@ public abstract class SaveSettingsMixin
              method = "openGameMenu(Z)V" )
     public void openPauseMenu( final boolean pause, final CallbackInfo info )
     {
-        Config.save();
+        ShowDurability.CONFIG.save();
     }
 }
