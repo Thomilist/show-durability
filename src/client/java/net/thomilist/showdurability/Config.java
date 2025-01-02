@@ -11,29 +11,30 @@ import java.nio.file.Path;
 
 public class Config
 {
-    private static Path CONFIG_PATH;
-    private static boolean VISIBLE = true;
+    private final Path configPath;
+    private boolean visible = true;
 
-    public static void initialise()
+    public Config()
     {
-        Config.CONFIG_PATH = MinecraftClient.getInstance().runDirectory
+        this.configPath = MinecraftClient.getInstance().runDirectory
             .toPath()
             .resolve( "config" )
             .resolve( "show-durability.json" );
-        Config.load();
+
+        this.load();
     }
 
-    public static void load()
+    public void load()
     {
         final String visibilitySettingJson;
 
         try
         {
-            visibilitySettingJson = Files.readString( Config.CONFIG_PATH );
+            visibilitySettingJson = Files.readString( this.configPath );
         }
         catch ( final IOException e )
         {
-            Config.save();
+            this.save();
             return;
         }
 
@@ -41,7 +42,7 @@ public class Config
 
         try
         {
-            Config.VISIBLE = gson.fromJson( visibilitySettingJson, Boolean.class );
+            this.visible = gson.fromJson( visibilitySettingJson, Boolean.class );
         }
         catch ( final JsonSyntaxException e )
         {
@@ -49,14 +50,14 @@ public class Config
         }
     }
 
-    public static void save()
+    public void save()
     {
         final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        final String visibilitySettingJson = gson.toJson( Config.VISIBLE );
+        final String visibilitySettingJson = gson.toJson( this.visible );
 
         try
         {
-            Files.writeString( Config.CONFIG_PATH, visibilitySettingJson );
+            Files.writeString( this.configPath, visibilitySettingJson );
         }
         catch ( final IOException e )
         {
@@ -64,13 +65,13 @@ public class Config
         }
     }
 
-    public static void toggleVisibility()
+    public void toggleVisibility()
     {
-        Config.VISIBLE = !Config.VISIBLE;
+        this.visible = !this.visible;
     }
 
-    public static boolean getVisibility()
+    public boolean getVisibility()
     {
-        return Config.VISIBLE;
+        return this.visible;
     }
 }
