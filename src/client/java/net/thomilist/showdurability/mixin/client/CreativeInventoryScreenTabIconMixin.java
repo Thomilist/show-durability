@@ -14,24 +14,29 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(CreativeInventoryScreen.class)
+@Mixin( CreativeInventoryScreen.class )
 public abstract class CreativeInventoryScreenTabIconMixin
     extends HandledScreen<CreativeScreenHandler>
 {
-    public CreativeInventoryScreenTabIconMixin(PlayerEntity player, FeatureSet enabledFeatures, boolean operatorTabEnabled)
+    @SuppressWarnings( "unused" )
+    protected CreativeInventoryScreenTabIconMixin( final PlayerEntity player,
+                                                   final FeatureSet enabledFeatures,
+                                                   final boolean operatorTabEnabled )
     {
-        super(new CreativeInventoryScreen.CreativeScreenHandler(player), player.getInventory(), ScreenTexts.EMPTY);
+        super( new CreativeInventoryScreen.CreativeScreenHandler( player ), player.getInventory(), ScreenTexts.EMPTY );
     }
 
-    @Inject(at = @At("HEAD"), method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V")
-    protected void renderTabIconStart(DrawContext context, ItemGroup group, CallbackInfo ci)
+    @Inject( at = @At( "HEAD" ),
+             method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V" )
+    protected void renderTabIconStart( final DrawContext context, final ItemGroup group, final CallbackInfo ci )
     {
-        ((ShowDurabilityAccess)context).show_durability$setTabIconState(true);
+        ((ShowDurabilityAccess) context).show_durability$setTabIconState( true );
     }
 
-    @Inject(at = @At("RETURN"), method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V")
-    protected void renderTabIconEnd(DrawContext context, ItemGroup group, CallbackInfo ci)
+    @Inject( at = @At( "RETURN" ),
+             method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V" )
+    protected void renderTabIconEnd( final DrawContext context, final ItemGroup group, final CallbackInfo ci )
     {
-        ((ShowDurabilityAccess)context).show_durability$setTabIconState(false);
+        ((ShowDurabilityAccess) context).show_durability$setTabIconState( false );
     }
 }

@@ -3,23 +3,26 @@ package net.thomilist.showdurability.mixin.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowEventHandler;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
-import net.thomilist.showdurability.Settings;
+import net.thomilist.showdurability.Config;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftClient.class)
-public abstract class SaveSettingsMixin extends ReentrantThreadExecutor<Runnable> implements WindowEventHandler
+@Mixin( MinecraftClient.class )
+public abstract class SaveSettingsMixin
+    extends ReentrantThreadExecutor<Runnable>
+    implements WindowEventHandler
 {
-    public SaveSettingsMixin(String string)
+    protected SaveSettingsMixin( final String string )
     {
-        super(string);
+        super( string );
     }
 
-    @Inject(at = @At("HEAD"), method = "openGameMenu(Z)V")
-    public void openPauseMenu(boolean pause, CallbackInfo info)
+    @Inject( at = @At( "HEAD" ),
+             method = "openGameMenu(Z)V" )
+    public void openPauseMenu( final boolean pause, final CallbackInfo info )
     {
-        Settings.save();
+        Config.save();
     }
 }
