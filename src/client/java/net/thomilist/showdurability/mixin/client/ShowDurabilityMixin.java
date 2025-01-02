@@ -4,7 +4,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.thomilist.showdurability.Config;
+import net.thomilist.showdurability.ShowDurability;
 import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,7 +59,7 @@ public abstract class ShowDurabilityMixin
                                   @Nullable final String countOverride,
                                   final CallbackInfo info )
     {
-        if ( Config.getVisibility() && !this.show_durability$isTabIcon() )
+        if ( ShowDurability.CONFIG.getVisibility() && !this.show_durability$isTabIcon() )
         {
             final MatrixStack matrices = this.getMatrices();
             matrices.push();

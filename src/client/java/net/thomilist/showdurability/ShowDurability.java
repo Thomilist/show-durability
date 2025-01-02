@@ -13,16 +13,14 @@ public class ShowDurability
     implements ClientModInitializer
 {
     public static final Logger LOGGER = LoggerFactory.getLogger( "ShowDurability" );
+    public static final Config CONFIG = new Config();
 
     private static KeyBinding KEY_BINDING;
 
     @Override
     public void onInitializeClient()
     {
-        Config.initialise();
-
-        ShowDurability.KEY_BINDING
-            = KeyBindingHelper.registerKeyBinding( new KeyBinding(
+        ShowDurability.KEY_BINDING = KeyBindingHelper.registerKeyBinding( new KeyBinding(
             "key.showdurability.toggle",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_B,
@@ -32,7 +30,7 @@ public class ShowDurability
         ClientTickEvents.END_CLIENT_TICK.register( client -> {
             while ( ShowDurability.KEY_BINDING.wasPressed() )
             {
-                Config.toggleVisibility();
+                ShowDurability.CONFIG.toggleVisibility();
             }
         } );
 
