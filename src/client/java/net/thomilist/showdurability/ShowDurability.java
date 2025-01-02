@@ -9,32 +9,33 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShowDurabilityMod implements ClientModInitializer
+public class ShowDurability
+    implements ClientModInitializer
 {
-    public static final Logger LOGGER = LoggerFactory.getLogger("ShowDurability");
+    public static final Logger LOGGER = LoggerFactory.getLogger( "ShowDurability" );
 
-    private static KeyBinding keyBinding;
+    private static KeyBinding KEY_BINDING;
 
     @Override
     public void onInitializeClient()
     {
-        Settings.initialise();
+        Config.initialise();
 
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        ShowDurability.KEY_BINDING
+            = KeyBindingHelper.registerKeyBinding( new KeyBinding(
             "key.showdurability.toggle",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_B,
             "category.showdurability"
-        ));
+        ) );
 
-        ClientTickEvents.END_CLIENT_TICK.register(client ->
-        {
-            while (keyBinding.wasPressed())
+        ClientTickEvents.END_CLIENT_TICK.register( client -> {
+            while ( ShowDurability.KEY_BINDING.wasPressed() )
             {
-                Settings.toggleVisibility();
+                Config.toggleVisibility();
             }
-        });
+        } );
 
-        LOGGER.info("ShowDurability initialised.");
+        ShowDurability.LOGGER.info( "Show Durability initialised." );
     }
 }

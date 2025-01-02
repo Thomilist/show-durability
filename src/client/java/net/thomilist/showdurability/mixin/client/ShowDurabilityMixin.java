@@ -7,7 +7,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.thomilist.showdurability.Settings;
+import net.thomilist.showdurability.Config;
 import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,36 +17,41 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DrawContext.class)
-public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
+@Mixin( DrawContext.class )
+public abstract class ShowDurabilityMixin
+    implements ShowDurabilityAccess
 {
+    // The factor used to scale the text size and move it accordingly.
+    // A factor of 2 means the text will be half the original size.
     @Unique
-    boolean is_tab_icon = false;
+    private static final int SCALE_FACTOR = 2;
+
+    @Unique
+    boolean isTabIcon = false;
 
     @Shadow public abstract MatrixStack getMatrices();
 
     @Override
-    public void show_durability$setTabIconState(boolean is_tab_icon)
+    public void show_durability$setTabIconState( final boolean isTabIcon )
     {
-        this.is_tab_icon = is_tab_icon;
-        return;
+        this.isTabIcon = isTabIcon;
     }
 
     @Override
     public boolean show_durability$isTabIcon()
     {
-        return this.is_tab_icon;
+        return this.isTabIcon;
     }
 
     @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
     public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
     {
-        if (Settings.getVisibility() && !show_durability$isTabIcon())
+        if ( Config.getVisibility() && !this.show_durability$isTabIcon() )
         {
-            MatrixStack matrices = getMatrices();
+            final MatrixStack matrices = this.getMatrices();
             matrices.push();
 
-            if (stack.getCount() == 1 && stack.isDamageable())
+            if ( (stack.getCount() == 1) && stack.isDamageable() )
             {
                 // The factor used to scale the text size and move it accordingly.
                 // A factor of 2.0f means the text will be half the original size.
