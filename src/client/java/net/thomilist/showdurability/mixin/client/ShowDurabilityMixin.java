@@ -4,7 +4,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.thomilist.showdurability.Settings;
+import net.thomilist.showdurability.Config;
 import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,8 +14,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DrawContext.class)
-public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
+@Mixin( DrawContext.class )
+public abstract class ShowDurabilityMixin
+    implements ShowDurabilityAccess
 {
     // The factor used to scale the text size and move it accordingly.
     // A factor of 2 means the text will be half the original size.
@@ -23,42 +24,57 @@ public abstract class ShowDurabilityMixin implements ShowDurabilityAccess
     private static final int SCALE_FACTOR = 2;
 
     @Unique
-    boolean is_tab_icon = false;
+    boolean isTabIcon = false;
 
     @Shadow
     public abstract MatrixStack getMatrices();
 
     @Shadow
-    public abstract int drawText(TextRenderer textRenderer, @Nullable String text, int x, int y, int color, boolean shadow);
+    public abstract int drawText( TextRenderer textRenderer,
+                                  @Nullable String text,
+                                  int x,
+                                  int y,
+                                  int color,
+                                  boolean shadow );
 
     @Override
-    public void show_durability$setTabIconState(boolean is_tab_icon)
+    public void show_durability$setTabIconState( final boolean isTabIcon )
     {
-        this.is_tab_icon = is_tab_icon;
+        this.isTabIcon = isTabIcon;
     }
 
     @Override
     public boolean show_durability$isTabIcon()
     {
-        return this.is_tab_icon;
+        return this.isTabIcon;
     }
 
-    @Inject(at = @At("TAIL"), method = "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
-    public void drawStackOverlay(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
+    @Inject( at = @At( "TAIL" ),
+             method = "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;" +
+                      "IILjava/lang/String;)V" )
+    public void drawStackOverlay( final TextRenderer textRenderer,
+                                  final ItemStack stack,
+                                  final int x,
+                                  final int y,
+                                  @Nullable final String countOverride,
+                                  final CallbackInfo info )
     {
-        if (Settings.getVisibility() && !show_durability$isTabIcon())
+        if ( Config.getVisibility() && !this.show_durability$isTabIcon() )
         {
-            MatrixStack matrices = getMatrices();
+            final MatrixStack matrices = this.getMatrices();
             matrices.push();
 
-            if (stack.getCount() == 1 && stack.isDamageable())
+            if ( (stack.getCount() == 1) && stack.isDamageable() )
             {
-                String durability = String.valueOf(stack.getMaxDamage() - stack.getDamage());
-                matrices.translate(0.0, 0.0, 200.0f);
-                matrices.scale(1.0f / SCALE_FACTOR, 1.0f / SCALE_FACTOR, 1);
-                final int textX = SCALE_FACTOR * x + (16 / SCALE_FACTOR) + 5 + 19 - 2 - textRenderer.getWidth(durability);
-                final int textY = SCALE_FACTOR * y + (16 / SCALE_FACTOR) + 1 + 6 + 3;
-                drawText(textRenderer, durability, textX, textY, 0xFFFFFF, true);
+                final String durability = String.valueOf( stack.getMaxDamage() - stack.getDamage() );
+                matrices.translate( 0.0, 0.0, 200.0f );
+                matrices.scale( 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1 );
+                final int textX =
+                    ((ShowDurabilityMixin.SCALE_FACTOR * x) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 5 + 19) - 2 -
+                    textRenderer.getWidth( durability );
+                final int textY = (ShowDurabilityMixin.SCALE_FACTOR * y) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 1 +
+                                  6 + 3;
+                this.drawText( textRenderer, durability, textX, textY, 0xFFFFFF, true );
             }
 
             matrices.pop();
