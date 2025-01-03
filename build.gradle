@@ -60,13 +60,14 @@ tasks.withType(ProcessResources).configureEach {
 	inputs.property "loader_version", project.loader_version
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version,
+		expand "java_version": javaVersionString,
+				"version": project.version,
 				"minecraft_version": project.minecraft_version,
 				"loader_version": project.loader_version
 	}
 
 	filesMatching("*.mixins.json") {
-		expand "javaVersion": javaVersionString
+		expand "java_version": javaVersionString
 	}
 }
 
