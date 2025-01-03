@@ -1,7 +1,7 @@
 {
     "required": true,
     "package": "net.thomilist.showdurability.mixin.client",
-    "compatibilityLevel": "${javaVersion}",
+    "compatibilityLevel": "${java_version}",
     "client": [
         "ShowDurabilityMixin",
         "SaveSettingsMixin",
