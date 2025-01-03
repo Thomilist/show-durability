@@ -33,7 +33,7 @@
         "fabricloader": ">=${loader_version}",
         "fabric-api-base": "*",
         "minecraft": "~${minecraft_version}",
-        "java": ">=21",
+        "java": ">=${java_version}",
         "fabric-key-binding-api-v1": "*"
     }
 }
