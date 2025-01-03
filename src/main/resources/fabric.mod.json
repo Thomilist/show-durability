@@ -19,7 +19,7 @@
     "environment": "client",
     "entrypoints": {
         "client": [
-            "net.thomilist.showdurability.ShowDurabilityMod"
+            "net.thomilist.showdurability.ShowDurability"
         ]
     },
     "mixins": [
