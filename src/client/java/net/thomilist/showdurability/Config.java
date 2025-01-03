@@ -11,6 +11,8 @@ import java.nio.file.Path;
 
 public class Config
 {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     private final Path configPath;
     private boolean visible = true;
 
@@ -26,42 +28,33 @@ public class Config
 
     public void load()
     {
-        final String visibilitySettingJson;
-
         try
         {
-            visibilitySettingJson = Files.readString( this.configPath );
+            final String visibilitySettingJson = Files.readString( this.configPath );
+            this.visible = Config.GSON.fromJson( visibilitySettingJson, Boolean.class );
         }
         catch ( final IOException e )
         {
+            ShowDurability.LOGGER.warn( "Failed to read config file", e );
             this.save();
-            return;
-        }
-
-        final Gson gson = new Gson();
-
-        try
-        {
-            this.visible = gson.fromJson( visibilitySettingJson, Boolean.class );
         }
         catch ( final JsonSyntaxException e )
         {
-            ShowDurability.LOGGER.error( "Invalid JSON syntax:", e );
+            ShowDurability.LOGGER.warn( "Invalid JSON syntax in config file", e );
+            this.save();
         }
     }
 
     public void save()
     {
-        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        final String visibilitySettingJson = gson.toJson( this.visible );
-
         try
         {
+            final String visibilitySettingJson = Config.GSON.toJson( this.visible );
             Files.writeString( this.configPath, visibilitySettingJson );
         }
         catch ( final IOException e )
         {
-            ShowDurability.LOGGER.error( "Unable to write to config file:", e );
+            ShowDurability.LOGGER.error( "Unable to write to config file", e );
         }
     }
 
