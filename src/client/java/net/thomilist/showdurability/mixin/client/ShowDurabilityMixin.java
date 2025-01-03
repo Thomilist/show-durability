@@ -2,6 +2,7 @@ package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -29,7 +30,8 @@ public abstract class ShowDurabilityMixin
     @Unique
     boolean isTabIcon = false;
 
-    @Shadow public abstract MatrixStack getMatrices();
+    @Shadow
+    public abstract MatrixStack getMatrices();
 
     @Override
     public void show_durability$setTabIconState( final boolean isTabIcon )
@@ -43,8 +45,15 @@ public abstract class ShowDurabilityMixin
         return this.isTabIcon;
     }
 
-    @Inject(at = @At("TAIL"), method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V")
-    public void drawItemInSlot(TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride, CallbackInfo info)
+    @Inject( at = @At( "TAIL" ),
+             method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;" +
+                      "IILjava/lang/String;)V" )
+    public void drawItemInSlot( final TextRenderer textRenderer,
+                                final ItemStack stack,
+                                final int x,
+                                final int y,
+                                @Nullable final String countOverride,
+                                final CallbackInfo info )
     {
         if ( ShowDurability.CONFIG.getVisibility() && !this.show_durability$isTabIcon() )
         {
@@ -53,25 +62,31 @@ public abstract class ShowDurabilityMixin
 
             if ( (stack.getCount() == 1) && stack.isDamageable() )
             {
-                // The factor used to scale the text size and move it accordingly.
-                // A factor of 2.0f means the text will be half the original size.
-                float scaleFactor = 2.0f;
+                final String durability = String.valueOf( stack.getMaxDamage() - stack.getDamage() );
+                matrices.translate( 0.0, 0.0, 200.0f );
+                matrices.scale( 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1 );
+                final BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+                final VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate( buffer );
 
-                String durability = String.valueOf(stack.getMaxDamage() - stack.getDamage());
-                matrices.translate(0.0, 0.0, 200.0f);
-                matrices.scale(1.0f / scaleFactor, 1.0f / scaleFactor, 1);
-                VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+                final int xAdjusted =
+                    ((ShowDurabilityMixin.SCALE_FACTOR * x) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 5 + 19) - 2 -
+                    textRenderer.getWidth( durability );
+                final int yAdjusted =
+                    (ShowDurabilityMixin.SCALE_FACTOR * y) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 1 + 6 + 3;
+
                 textRenderer.draw(
                     durability,
-                    (float)(scaleFactor * x + (16 / scaleFactor) + 5 + 19 - 2 - textRenderer.getWidth(durability)),
-                    (float)(scaleFactor * y + (16 / scaleFactor) + 1 + 6 + 3),
+                    xAdjusted,
+                    yAdjusted,
                     0xFFFFFF,
                     true,
                     matrices.peek().getPositionMatrix(),
                     immediate,
                     TextRenderer.TextLayerType.NORMAL,
                     0,
-                    LightmapTextureManager.MAX_LIGHT_COORDINATE);
+                    LightmapTextureManager.MAX_LIGHT_COORDINATE
+                );
+
                 immediate.draw();
             }
 

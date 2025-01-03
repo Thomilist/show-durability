@@ -20,7 +20,7 @@ public abstract class SaveSettingsMixin
     }
 
     @Inject( at = @At( "HEAD" ),
-             method = "openGameMenu(Z)V" )
+             method = "openPauseMenu(Z)V" )
     public void openPauseMenu( final boolean pause, final CallbackInfo info )
     {
         ShowDurability.CONFIG.save();
