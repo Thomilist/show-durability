@@ -43,6 +43,11 @@ public class Config
             ShowDurability.LOGGER.warn( "Invalid JSON syntax in config file", e );
             this.save();
         }
+        catch ( final NullPointerException e )
+        {
+            ShowDurability.LOGGER.warn( "Config is empty or null", e );
+            this.save();
+        }
     }
 
     public void save()
