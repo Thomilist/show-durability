@@ -2,11 +2,12 @@ package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Colors;
 import net.thomilist.showdurability.ShowDurability;
 import net.thomilist.showdurability.access.ShowDurabilityAccess;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -27,15 +28,15 @@ public abstract class ShowDurabilityMixin
     boolean isTabIcon = false;
 
     @Shadow
-    public abstract MatrixStack getMatrices();
+    public abstract Matrix3x2fStack getMatrices();
 
     @Shadow
-    public abstract int drawText( TextRenderer textRenderer,
-                                  @Nullable String text,
-                                  int x,
-                                  int y,
-                                  int color,
-                                  boolean shadow );
+    public abstract void drawText( TextRenderer textRenderer,
+                                   @Nullable String text,
+                                   int x,
+                                   int y,
+                                   int color,
+                                   boolean shadow );
 
     @Override
     public void show_durability$setTabIconState( final boolean isTabIcon )
@@ -61,23 +62,23 @@ public abstract class ShowDurabilityMixin
     {
         if ( ShowDurability.CONFIG.getVisibility() && !this.show_durability$isTabIcon() )
         {
-            final MatrixStack matrices = this.getMatrices();
-            matrices.push();
+            final Matrix3x2fStack matrices = this.getMatrices();
+            matrices.pushMatrix();
 
             if ( (stack.getCount() == 1) && stack.isDamageable() )
             {
                 final String durability = String.valueOf( stack.getMaxDamage() - stack.getDamage() );
-                matrices.translate( 0.0, 0.0, 200.0f );
-                matrices.scale( 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1 );
+                matrices.translate( 0.0f, 0.0f );
+                matrices.scale( 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1.0f / ShowDurabilityMixin.SCALE_FACTOR );
                 final int textX =
                     ((ShowDurabilityMixin.SCALE_FACTOR * x) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 5 + 19) - 2 -
                     textRenderer.getWidth( durability );
                 final int textY = (ShowDurabilityMixin.SCALE_FACTOR * y) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 1 +
                                   6 + 3;
-                this.drawText( textRenderer, durability, textX, textY, 0xFFFFFF, true );
+                this.drawText( textRenderer, durability, textX, textY, Colors.WHITE, true );
             }
 
-            matrices.pop();
+            matrices.popMatrix();
         }
     }
 }
