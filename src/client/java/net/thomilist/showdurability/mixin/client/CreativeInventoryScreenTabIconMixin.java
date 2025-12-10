@@ -27,15 +27,15 @@ public abstract class CreativeInventoryScreenTabIconMixin
     }
 
     @Inject( at = @At( "HEAD" ),
-             method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V" )
-    protected void renderTabIconStart( final DrawContext context, final ItemGroup group, final CallbackInfo ci )
+             method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;IILnet/minecraft/item/ItemGroup;)V" )
+    protected void renderTabIconStart( final DrawContext context, final int mouseX, final int mouseY, final ItemGroup group, final CallbackInfo ci )
     {
         ((ShowDurabilityAccess) context).show_durability$setTabIconState( true );
     }
 
     @Inject( at = @At( "RETURN" ),
-             method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemGroup;)V" )
-    protected void renderTabIconEnd( final DrawContext context, final ItemGroup group, final CallbackInfo ci )
+             method = "renderTabIcon(Lnet/minecraft/client/gui/DrawContext;IILnet/minecraft/item/ItemGroup;)V" )
+    protected void renderTabIconEnd( final DrawContext context, final int mouseX, final int mouseY, final ItemGroup group, final CallbackInfo ci )
     {
         ((ShowDurabilityAccess) context).show_durability$setTabIconState( false );
     }
