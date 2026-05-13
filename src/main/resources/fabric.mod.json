@@ -32,7 +32,7 @@
     "depends": {
         "fabricloader": ">=${loader_version}",
         "fabric-api-base": "*",
-        "minecraft": "~${minecraft_version}",
+        "minecraft": "~${target_minecraft_version}",
         "java": ">=${java_version}",
         "fabric-key-mapping-api-v1": "*"
     }
