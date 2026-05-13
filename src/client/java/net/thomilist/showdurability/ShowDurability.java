@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
+
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,9 @@ public class ShowDurability
     public static final Config CONFIG = new Config();
 
     private static final KeyBinding.Category CATEGORY = KeyBinding.Category.create( Identifier.of(
-        "category",
-        "showdurability" ) );
+        "showdurability",
+        "main"
+    ) );
     private static KeyBinding KEY_BINDING;
 
     @Override
