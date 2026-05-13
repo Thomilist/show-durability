@@ -14,9 +14,9 @@ public abstract class SaveSettingsMixin
     extends ReentrantBlockableEventLoop<Runnable>
     implements WindowEventHandler
 {
-    protected SaveSettingsMixin( final String string )
+    protected SaveSettingsMixin( final String name, final boolean propagatesCrashes )
     {
-        super( string );
+        super( name, propagatesCrashes );
     }
 
     @Inject( at = @At( "HEAD" ),

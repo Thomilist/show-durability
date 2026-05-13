@@ -2,7 +2,7 @@ package net.thomilist.showdurability;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.resources.Identifier;
@@ -26,7 +26,7 @@ public class ShowDurability
     @Override
     public void onInitializeClient()
     {
-        ShowDurability.KEY_BINDING = KeyBindingHelper.registerKeyBinding( new KeyMapping(
+        ShowDurability.KEY_BINDING = KeyMappingHelper.registerKeyMapping( new KeyMapping(
             "key.showdurability.toggle",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_B,

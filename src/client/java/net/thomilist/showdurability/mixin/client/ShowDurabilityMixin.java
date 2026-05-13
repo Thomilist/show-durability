@@ -1,11 +1,12 @@
 package net.thomilist.showdurability.mixin.client;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.CommonColors;
+import net.minecraft.world.item.ItemStack;
 import net.thomilist.showdurability.ShowDurability;
 import net.thomilist.showdurability.access.ShowDurabilityAccess;
+
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin( GuiGraphics.class )
+@Mixin( GuiGraphicsExtractor.class )
 public abstract class ShowDurabilityMixin
     implements ShowDurabilityAccess
 {
@@ -31,12 +32,13 @@ public abstract class ShowDurabilityMixin
     public abstract Matrix3x2fStack pose();
 
     @Shadow
-    public abstract void drawString( Font font,
-                                     @Nullable String text,
-                                     int x,
-                                     int y,
-                                     int color,
-                                     boolean shadow );
+    public abstract void text(
+        final Font font,
+        final @Nullable String str,
+        final int x,
+        final int y,
+        final int color,
+        final boolean dropShadow );
 
     @Override
     public void show_durability$setTabIconState( final boolean isTabIcon )
@@ -51,14 +53,15 @@ public abstract class ShowDurabilityMixin
     }
 
     @Inject( at = @At( "TAIL" ),
-             method = "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;" +
-                      "IILjava/lang/String;)V" )
-    public void renderItemCount( final Font font,
-                                  final ItemStack itemStack,
-                                  final int x,
-                                  final int y,
-                                  @Nullable final String countOverride,
-                                  final CallbackInfo info )
+             method = "itemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;" +
+                 "IILjava/lang/String;)V" )
+    public void itemCount(
+        final Font font,
+        final ItemStack itemStack,
+        final int x,
+        final int y,
+        final @Nullable String countText,
+        final CallbackInfo info )
     {
         if ( ShowDurability.CONFIG.getVisibility() && !this.show_durability$isTabIcon() )
         {
@@ -72,10 +75,10 @@ public abstract class ShowDurabilityMixin
                 pose.scale( 1.0f / ShowDurabilityMixin.SCALE_FACTOR, 1.0f / ShowDurabilityMixin.SCALE_FACTOR );
                 final int textX =
                     ((ShowDurabilityMixin.SCALE_FACTOR * x) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 5 + 19) - 2 -
-                    font.width( durability );
+                        font.width( durability );
                 final int textY = (ShowDurabilityMixin.SCALE_FACTOR * y) + (16 / ShowDurabilityMixin.SCALE_FACTOR) + 1 +
-                                  6 + 3;
-                this.drawString( font, durability, textX, textY, CommonColors.WHITE, true );
+                    6 + 3;
+                this.text( font, durability, textX, textY, CommonColors.WHITE, true );
             }
 
             pose.popMatrix();
