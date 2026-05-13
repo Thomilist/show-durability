@@ -5,7 +5,7 @@
     "client": [
         "ShowDurabilityMixin",
         "SaveSettingsMixin",
-        "CreativeInventoryScreenTabIconMixin"
+        "CreativeModeInventoryScreenTabIconMixin"
     ],
     "injectors": {
         "defaultRequire": 1

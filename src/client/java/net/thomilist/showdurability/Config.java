@@ -3,7 +3,7 @@ package net.thomilist.showdurability;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,7 +18,7 @@ public class Config
 
     public Config()
     {
-        this.configPath = MinecraftClient.getInstance().runDirectory
+        this.configPath = Minecraft.getInstance().gameDirectory
             .toPath()
             .resolve( "config" )
             .resolve( "show-durability.json" );
